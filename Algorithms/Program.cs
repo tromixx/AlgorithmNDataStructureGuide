@@ -1,18 +1,94 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
+using System.Threading;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CompileCs
 {
     class Program
     {
-        static void Main(string[] args)
+        public List<T> FilterList<T>(List<T> list, Func<T, bool> predicate)
+        {
+            return list.Where(predicate).ToList();
+        }
+        static async Task Main(string[] args)
         {
             System.Console.WriteLine("This is working!");
-            //Hello();
             //Arrays();
             //LinkedList();
-            BinaryTreeComplete();
+            //BinaryTreeComplete();
+            //Problems problem = new Problems();
+            //problem.Hello();
+
+            //2 Implement an Asynchronous Method Using async and await
+            var requester = new WebRequester();
+            string content = await requester.GetWebContentAsync("https://example.com");
+            Console.WriteLine(content);
+
+            //3 Implement an Event and an Event Handler(events and delegates)
+            var publisher = new Publisher();
+            var subscriber = new Subscriber();
+            subscriber.Subscribe(publisher);
+            publisher.RaiseEvent();
+
+            //4 Implement a Custom IEnumerable<T> Collection
+            var collection = new CustomCollection<int>();
+            collection.Add(1);
+            collection.Add(2);
+            collection.Add(3);
+
+            foreach (var item in collection)
+            {
+                Console.WriteLine(item);
+            }
+
+            //5 Implement a Thread-Safe Blocking Queue (Knowledge of threading, synchronization, and concurrency.)
+            var blockingQueue = new BlockingQueue<int>();
+            var producer = new Thread(() =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    blockingQueue.Enqueue(i);
+                    Thread.Sleep(100); // Simulate work
+                }
+            });
+
+            var consumer = new Thread(() =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    var item = blockingQueue.Dequeue();
+                    Console.WriteLine($"Dequeued: {item}");
+                }
+            });
+
+            producer.Start();
+            consumer.Start();
+            producer.Join();
+            consumer.Join();
+
+            //6
+            var demo = new Program();
+
+            var intList = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var evenNumbers = demo.FilterList(intList, n => n % 2 == 0);
+
+            foreach (var number in evenNumbers)
+            {
+                Console.WriteLine(number); // 2, 4, 6, 8, 10
+            }
+
+            var stringList = new List<string> { "apple", "banana", "cherry", "date" };
+            var longStrings = demo.FilterList(stringList, s => s.Length > 5);
+
+            foreach (var str in longStrings)
+            {
+                Console.WriteLine(str); // banana, cherry
+            }
         }
 
         static void Hello()
